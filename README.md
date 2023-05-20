@@ -17,7 +17,7 @@ This application will be built with an advanced way for golang using postgres. I
 # Getting Started
 
 # DB Schema
-<img src="img/db-schema.jpg" width:200 height:200></img>
+<img src="assets/db-schema.jpg" width:200 height:200></img>
 
 # Features
 
