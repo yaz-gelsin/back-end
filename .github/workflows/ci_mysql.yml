@@ -1,4 +1,4 @@
-name: ci-test
+name: ci-connections
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
 
 jobs:
 
-  tests:
-    name: ci-tests
+  mysql:
+    name: ci-mysql
     runs-on: ubuntu-latest
 
     # Service containers to run with `container-job`
