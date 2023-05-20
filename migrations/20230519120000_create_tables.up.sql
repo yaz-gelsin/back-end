@@ -121,3 +121,8 @@ ALTER TABLE `reviews` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 ALTER TABLE `addresses` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 ALTER TABLE `order_items` ADD FOREIGN KEY (`order_id`) REFERENCES `order_items` (`id`);
+
+ALTER TABLE `products` DROP INDEX (`category_id`);
+
+ALTER TABLE `carts` DROP INDEX (`items`);
+
