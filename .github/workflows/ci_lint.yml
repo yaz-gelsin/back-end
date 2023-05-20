@@ -1,4 +1,5 @@
-name: Lint
+
+name: Go Linter
 
 on:
   push:
@@ -9,22 +10,21 @@ on:
       - main
 
 jobs:
-  lint:
-    name: Linter
+  linter:
+    name: Run Go Linter
     runs-on: ubuntu-latest
-
+    
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.x  # İstediğiniz Go sürümünü burada belirtebilirsiniz.
+          go-version: 1.17
 
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Install linter
-        run: |
-          go install github.com/golangci/golangci-lint/cmd/@latest
-
-      - name: Run linter
+      - name: Install golangci-lint
+        run: GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/[email protected]
+        
+      - name: Run golangci-lint
         run: golangci-lint run ./...
