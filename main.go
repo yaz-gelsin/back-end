@@ -4,12 +4,14 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/yaz-gelsin/internal/handler"
 	"github.com/yaz-gelsin/pkg"
 )
 
-func main() {
+func InitDB() (*sql.DB, error) {
 	// Load the configuration
 	config, err := pkg.LoadConfig(".")
 	if err != nil {
@@ -31,4 +33,19 @@ func main() {
 
 	fmt.Println("Connected to the database!")
 
+	return conn, nil
+}
+
+func main() {
+	// SQL bağlantısını oluşturun
+	db, err := InitDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Router'ı başlatın
+	router := handler.InitRouter(db)
+
+	// Sunucuyu belirli bir portta dinlemeye başlayın
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
