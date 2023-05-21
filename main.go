@@ -1,17 +1,19 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/yaz-gelsin/internal/handler"
+	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
+	"github.com/yaz-gelsin/internal/handler/api"
+	"github.com/yaz-gelsin/internal/usecase"
 	"github.com/yaz-gelsin/pkg"
 )
 
-func InitDB() (*sql.DB, error) {
+func InitDB() (*sqlx.DB, error) {
 	// Load the configuration
 	config, err := pkg.LoadConfig(".")
 	if err != nil {
@@ -19,7 +21,7 @@ func InitDB() (*sql.DB, error) {
 	}
 
 	// Open a database connection
-	conn, err := sql.Open(config.DBDriver, config.DBSource)
+	conn, err := sqlx.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
@@ -37,15 +39,24 @@ func InitDB() (*sql.DB, error) {
 }
 
 func main() {
-	// SQL bağlantısını oluşturun
+	// SQL connection initialization
 	db, err := InitDB()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Router'ı başlatın
-	router := handler.InitRouter(db)
+	// Create a new router
+	router := mux.NewRouter()
 
-	// Sunucuyu belirli bir portta dinlemeye başlayın
-	log.Fatal(http.ListenAndServe(":8080", router))
+	// Create an instance of your use case implementation
+	useCase := usecase.NewUseCase(api.NewProductRepo(db))
+
+	// Create an instance of your handler and pass the use case implementation and DB instance
+	handler := api.NewHandler(useCase, db)
+
+	// Initialize the router using the InitRouter function
+	routerHandler := handler.InitRouter(router)
+
+	// Start the server
+	log.Fatal(http.ListenAndServe(":8080", routerHandler))
 }
