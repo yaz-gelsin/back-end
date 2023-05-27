@@ -11,6 +11,7 @@ import (
 
 type YGUseCase interface {
 	InsertProduct(ctx context.Context, product entities.Product) (entities.Product, error)
+	GetAll(ctx context.Context) ([]entities.Product, error)
 }
 
 type YGHandler struct {

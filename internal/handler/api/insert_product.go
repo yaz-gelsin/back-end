@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -24,13 +23,13 @@ func (h *YGHandler) InsertProduct(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(product)
 
-	product, err = h.uc.InsertProduct(ctx, product)
+	_, err = h.uc.InsertProduct(ctx, product)
 	if err != nil {
 		http.Error(w, "An error occurred: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	h.writeResponse(w, http.StatusOK, product)
+	// TODO think about better response
+	h.writeResponse(w, http.StatusOK, "Product saved successfully...")
 }

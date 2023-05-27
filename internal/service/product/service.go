@@ -8,6 +8,7 @@ import (
 
 type productStore interface {
 	InsertProduct(ctx context.Context, product entities.Product) (entities.Product, error)
+	GetAll(ctx context.Context) ([]entities.Product, error)
 }
 
 type Service struct {
