@@ -50,10 +50,8 @@ func main() {
 
 	repo := product.NewProductRepo(db)
 
-	// Create an instance of your use case implementation
 	useCase := usecase.NewUseCase(repo)
 
-	// Create an instance of your handler and pass the use case implementation and DB instance
 	handler := api.NewHandler(useCase, db)
 
 	// Initialize the router using the InitRouter function
