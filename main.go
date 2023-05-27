@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
+	"github.com/yaz-gelsin/internal/adapter/mysqlrepo/product"
 	"github.com/yaz-gelsin/internal/handler/api"
 	"github.com/yaz-gelsin/internal/usecase"
 	"github.com/yaz-gelsin/pkg"
@@ -25,7 +26,6 @@ func InitDB() (*sqlx.DB, error) {
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
-	defer conn.Close()
 
 	// Check the connection
 	err = conn.Ping()
@@ -48,14 +48,16 @@ func main() {
 	// Create a new router
 	router := mux.NewRouter()
 
+	repo := product.NewProductRepo(db)
+
 	// Create an instance of your use case implementation
-	useCase := usecase.NewUseCase(api.NewProductRepo(db))
+	useCase := usecase.NewUseCase(repo)
 
 	// Create an instance of your handler and pass the use case implementation and DB instance
 	handler := api.NewHandler(useCase, db)
 
 	// Initialize the router using the InitRouter function
-	routerHandler := handler.InitRouter(router)
+	routerHandler := handler.InitRouter(router, db)
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8080", routerHandler))

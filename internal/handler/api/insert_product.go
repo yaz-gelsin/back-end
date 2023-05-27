@@ -2,7 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/yaz-gelsin/internal/entities"
@@ -10,7 +11,7 @@ import (
 
 func (h *YGHandler) InsertProduct(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -23,10 +24,11 @@ func (h *YGHandler) InsertProduct(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	fmt.Println(product)
 
 	product, err = h.uc.InsertProduct(ctx, product)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		http.Error(w, "An error occurred: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
