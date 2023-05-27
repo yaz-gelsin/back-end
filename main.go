@@ -1,17 +1,20 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/yaz-gelsin/internal/handler"
+	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
+	"github.com/yaz-gelsin/internal/adapter/mysqlrepo/product"
+	"github.com/yaz-gelsin/internal/handler/api"
+	"github.com/yaz-gelsin/internal/usecase"
 	"github.com/yaz-gelsin/pkg"
 )
 
-func InitDB() (*sql.DB, error) {
+func InitDB() (*sqlx.DB, error) {
 	// Load the configuration
 	config, err := pkg.LoadConfig(".")
 	if err != nil {
@@ -19,11 +22,10 @@ func InitDB() (*sql.DB, error) {
 	}
 
 	// Open a database connection
-	conn, err := sql.Open(config.DBDriver, config.DBSource)
+	conn, err := sqlx.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
-	defer conn.Close()
 
 	// Check the connection
 	err = conn.Ping()
@@ -37,15 +39,24 @@ func InitDB() (*sql.DB, error) {
 }
 
 func main() {
-	// SQL bağlantısını oluşturun
+	// SQL connection initialization
 	db, err := InitDB()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Router'ı başlatın
-	router := handler.InitRouter(db)
+	// Create a new router
+	router := mux.NewRouter()
 
-	// Sunucuyu belirli bir portta dinlemeye başlayın
-	log.Fatal(http.ListenAndServe(":8080", router))
+	repo := product.NewProductRepo(db)
+
+	useCase := usecase.NewUseCase(repo)
+
+	handler := api.NewHandler(useCase, db)
+
+	// Initialize the router using the InitRouter function
+	routerHandler := handler.InitRouter(router, db)
+
+	// Start the server
+	log.Fatal(http.ListenAndServe(":8080", routerHandler))
 }

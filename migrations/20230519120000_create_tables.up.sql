@@ -4,27 +4,27 @@ CREATE TABLE `users` (
   `last_name` varchar(255),
   `email` varchar(255) UNIQUE,
   `password` varchar(255),
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `products` (
-  `id` varchar(255) PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
   `description` varchar(255),
   `price` decimal,
   `quantity` int,
-  `category_id` json,
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `category_id` int,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `categories` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
   `description` varchar(255),
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `orders` (
@@ -33,8 +33,8 @@ CREATE TABLE `orders` (
   `coupon_id` int,
   `total` decimal,
   `status` varchar(255),
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `order_items` (
@@ -43,26 +43,26 @@ CREATE TABLE `order_items` (
   `product_id` varchar(255),
   `quantity` int,
   `price` decimal,
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `carts` (
-  `id` varchar(255) PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int,
   `items` json,
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `cart_items` (
-  `id` varchar(255) PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `cart_id` varchar(255),
   `product_id` varchar(255),
   `quantity` int,
   `price` decimal,
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `reviews` (
@@ -72,8 +72,8 @@ CREATE TABLE `reviews` (
   `title` varchar(255),
   `body` text,
   `rating` int,
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `coupons` (
@@ -81,8 +81,8 @@ CREATE TABLE `coupons` (
   `code` varchar(255) UNIQUE,
   `type` varchar(255),
   `value` decimal,
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `addresses` (
@@ -94,6 +94,6 @@ CREATE TABLE `addresses` (
   `state` varchar(255),
   `country` varchar(255),
   `zip_code` varchar(255),
-  `created_at` timestamp,
-  `updated_at` timestamp
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

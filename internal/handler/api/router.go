@@ -1,10 +1,17 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 )
 
-func GetAll(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Hello World!")
+func (h *YGHandler) InitRouter(r *mux.Router, db *sqlx.DB) http.Handler {
+
+	h.DB = db
+
+	r.HandleFunc("/", h.InsertProduct).Methods(http.MethodPost)
+
+	return r
 }
