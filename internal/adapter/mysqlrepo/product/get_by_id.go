@@ -13,7 +13,7 @@ func (r *Repository) GetByID(ctx context.Context) ([]entities.Product, error) {
          WHERE id = ?`
 
 	var products []entities.Product
-
+// test
 	err := r.conn.GetContext(ctx, &products, queryString)
 	if err != nil {
 		return products, fmt.Errorf("error while inserting product: %w", err)
